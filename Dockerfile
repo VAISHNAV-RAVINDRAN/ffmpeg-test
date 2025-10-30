@@ -1,13 +1,13 @@
-# Use official Python image
+# Use official Python base image
 FROM python:3.10-slim
 
-# Install ffmpeg
+# Install FFmpeg
 RUN apt-get update && apt-get install -y ffmpeg
 
-# Set work directory
+# Set working directory
 WORKDIR /app
 
-# Copy project files
+# Copy all project files
 COPY . .
 
 # Install dependencies
@@ -16,5 +16,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Expose Flask port
 EXPOSE 5000
 
-# Run app using Gunicorn
+# Start the app with Gunicorn
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
