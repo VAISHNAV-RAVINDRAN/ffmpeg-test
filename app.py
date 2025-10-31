@@ -6,7 +6,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def extract_subtitles():
-    video_url = "https://example.com/sample-video.mp4"
+    video_url = "video_url = "https://www.dropbox.com/scl/fi/3p351jeju63np8ez371fx/Let-s-Learn-English-on-the-Road-_-English-Video-with-Subtitles.mp4?rlkey=a96sz8karrv56bsf5m7j3ppap&st=ck7wuhkc&raw=1"
+"
     output_file = "output.srt"
 
     try:
