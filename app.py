@@ -6,23 +6,27 @@ app = Flask(__name__)
 
 @app.route("/")
 def extract_subtitles():
-    video_url = "video_url = "https://www.dropbox.com/scl/fi/3p351jeju63np8ez371fx/Let-s-Learn-English-on-the-Road-_-English-Video-with-Subtitles.mp4?rlkey=a96sz8karrv56bsf5m7j3ppap&st=ck7wuhkc&raw=1"
-"
+    # ✅ Direct Dropbox video URL
+    video_url = "https://www.dropbox.com/scl/fi/3p351jeju63np8ez371fx/Let-s-Learn-English-on-the-Road-_-English-Video-with-Subtitles.mp4?rlkey=a96sz8karrv56bsf5m7j3ppap&st=ck7wuhkc&raw=1"
+
     output_file = "output.srt"
 
     try:
-        # Run ffmpeg to extract the first subtitle track
-        subprocess.run([
-            "ffmpeg", "-i", video_url, "-map", "0:s:0",
-            output_file, "-y"
-        ], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Run ffmpeg command to extract the first subtitle track
+        result = subprocess.run([
+            "ffmpeg", "-y", "-i", video_url, "-map", "0:s:0", output_file
+        ], check=True, capture_output=True, text=True)
 
-        return send_file(output_file, as_attachment=True)
+        if os.path.exists(output_file):
+            return send_file(output_file, as_attachment=True)
+        else:
+            return "<h3>❌ Subtitle file not found — maybe no subtitles in this video.</h3>"
 
     except subprocess.CalledProcessError as e:
-        return f"<h3>❌ FFmpeg failed:</h3><pre>{e.stderr.decode()}</pre>"
+        return f"<h3>❌ FFmpeg failed:</h3><pre>{e.stderr}</pre>"
 
     finally:
+        # Clean up temporary file if it exists
         if os.path.exists(output_file):
             os.remove(output_file)
 
